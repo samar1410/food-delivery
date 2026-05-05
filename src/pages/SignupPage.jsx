@@ -21,8 +21,8 @@ const handleSignup = async (values, { setSubmitting }) => {
       password: values.password,
       options: {
         data: {
-          full_name: values.fullName,
-          user_metadata,
+          full_name: values.username,
+         
         },
       },
     });
@@ -89,7 +89,7 @@ const SignupPage = () => {
                 <Field
                   className=" w-full border rounded-full border-2 p-2 border-amber-500 cursor-pointer bg-amber-50"
                   name="username"
-                  tyep="text"
+                 type="text"
                   placeholder="Enter your name"
                 />
               </div>
@@ -106,7 +106,7 @@ const SignupPage = () => {
                 <Field
                   className=" w-full border rounded-full border-2 p-2 border-amber-500 cursor-pointer bg-amber-50"
                   name="email"
-                  tyep="email"
+                  type="email"
                   placeholder="Enter your email"
                 />
               </div>
