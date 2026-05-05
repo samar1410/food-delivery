@@ -64,9 +64,8 @@ const LoginPage = () => {
         >
           {({ isSubmitting }) => (
             <Form className="w-[400px] rounded-2xl flex flex-col items-center justify-center p-4 bg-amber-300 h-auto gap-3">
-              <div className=" flex flex-col items-center justify-center py-5">
+              <div className=" flex flex-col items-center justify-center gap-3 py-5">
                 <img className="w-25" src="/imgs/order.png" alt="" />
-
                 <p className="text-gray-600">
                   Welcome back! Please enter your details.
                 </p>
@@ -120,7 +119,7 @@ const LoginPage = () => {
               </button>
               </div>
 
-              <Link className="text-red-700" to="/">
+              <Link className="text-red-700" to="/signup">
                 {" "}
                 <span className="text-black">Don’t have an account?</span> Sign
                 up fo free!
