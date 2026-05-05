@@ -2,16 +2,15 @@ import { Formik, Field, ErrorMessage, Form } from "formik";
 import * as yup from "yup";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { FaRegEyeSlash } from "react-icons/fa";
 import React from "react";
 import { Link } from "react-router-dom";
-
 import { FaUnlockKeyhole } from "react-icons/fa6";
 import { supabase } from "../supabase";
 import PasswordField from "../components/PasswordField";
 import { FaKey } from "react-icons/fa";
-
 import RememberMe from "../components/RememberMe";
+import { LuEyeClosed } from "react-icons/lu";
+import { LuEye } from "react-icons/lu";
 
 const handleLogin = async (values, { setSubmitting }) => {
   try {
@@ -89,10 +88,14 @@ const LoginPage = () => {
                   className="text-red-500 text-xs mt-1   ml-12 "
                 />
               </div>
-              <PasswordField
-                name="password"
-                placeholder="Enter your password"
-              />
+              <div className=" flex  items-center w-full gap-3">
+              
+                <PasswordField
+                    name="password"
+                    placeholder="password"
+                  />
+              </div>
+            
 
               <div className="flex gap-12  items-center justify-between w-full mt-2">
                 <RememberMe />
@@ -113,7 +116,7 @@ const LoginPage = () => {
                 disabled={isSubmitting}
                 className="btn border-white bg-amber-500    w-full  rounded-3xl"
               >
-                {isSubmitting ? "Loding ..." : "Login"}
+                {isSubmitting ? "Loading ..." : "Login"}
               </button>
               </div>
 

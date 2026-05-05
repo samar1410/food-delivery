@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Field, ErrorMessage } from 'formik';
-import { FaEye, FaRegEyeSlash } from 'react-icons/fa';
+import { LuEyeClosed } from "react-icons/lu";
+import { LuEye } from "react-icons/lu";
 import { RiLockPasswordFill } from "react-icons/ri";
-
 const PasswordField = ({ name, placeholder }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -22,7 +22,11 @@ const PasswordField = ({ name, placeholder }) => {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-gray-600"
           >
-            {showPassword ? <FaEye />  :  <FaRegEyeSlash />}
+           {showPassword ? (
+                      <LuEye />
+                     ) : (
+                       <LuEyeClosed />
+                     )}
           </button>
         </div>
       </div>
