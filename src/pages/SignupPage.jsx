@@ -13,8 +13,9 @@ import RememberMe from "../components/RememberMe";
 import { LuEyeClosed } from "react-icons/lu";
 import { LuEye } from "react-icons/lu";
 import { FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-const handleSignup = async (values, { setSubmitting }) => {
+const handleSignup = async (values, { setSubmitting } , navigate ) => {
   try {
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
@@ -34,7 +35,8 @@ const handleSignup = async (values, { setSubmitting }) => {
       } else {
         localStorage.removeItem("rememberedEmail");
       }
-      alert("Registration successful! Check your email for confirmation.");
+      alert("Registration successful");
+      navigate("/")
       console.log("Registered user:", data);
     }
   } catch (err) {
@@ -61,6 +63,7 @@ const SignupSchema = yup.object().shape({
 });
 
 const SignupPage = () => {
+    const navigate = useNavigate();
   return (
     <div className="w-full font-inter  bg-[url('/imgs/black.jpg')] bg-center bg-cover size-full justify-center items-center text-gray-900">
       <div className="container w-full h-full flex items-center justify-center">
@@ -74,7 +77,8 @@ const SignupPage = () => {
             username: "",
           }}
           validationSchema={SignupSchema}
-          onSubmit={handleSignup}
+         
+          onSubmit={(values, actions) => handleSignup(values, actions, navigate)}
         >
           {({ isSubmitting }) => (
             <Form className="w-[400px] rounded-2xl flex flex-col items-center justify-center p-4 bg-amber-300 h-auto gap-3">

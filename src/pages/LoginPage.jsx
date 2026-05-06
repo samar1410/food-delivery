@@ -11,8 +11,9 @@ import { FaKey } from "react-icons/fa";
 import RememberMe from "../components/RememberMe";
 import { LuEyeClosed } from "react-icons/lu";
 import { LuEye } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
-const handleLogin = async (values, { setSubmitting }) => {
+const handleLogin = async (values, { setSubmitting } , navigate) => {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: values.email,
@@ -27,6 +28,7 @@ const handleLogin = async (values, { setSubmitting }) => {
         localStorage.removeItem("rememberedEmail");
       }
       alert("Login successful");
+      navigate("/home")
       console.log("User data:", data);
     }
   } catch (err) {
@@ -48,6 +50,7 @@ const loginSchema = yup.object().shape({
 });
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-full font-inter  bg-[url('/imgs/black.jpg')] bg-center bg-cover size-full justify-center items-center text-gray-900">
       <div className="container w-full h-full flex items-center justify-center">
@@ -60,7 +63,8 @@ const LoginPage = () => {
               : false,
           }}
           validationSchema={loginSchema}
-          onSubmit={handleLogin}
+         
+          onSubmit={(values, actions) => handleLogin (values, actions, navigate)}
         >
           {({ isSubmitting }) => (
             <Form className="w-[400px] rounded-2xl flex flex-col items-center justify-center p-4 bg-amber-300 h-auto gap-3">
