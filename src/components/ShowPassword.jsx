@@ -35,7 +35,7 @@ const PasswordField = ({ name, placeholder }) => {
       <ErrorMessage 
         name={name} 
         component="div" 
-        className="text-red-700 text-xs font-bold mt-1 px-2" 
+        className="text-red-500 text-xs mt-1 ml-12 " 
       />
     </div>
   );

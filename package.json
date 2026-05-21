@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
+    "@fortawesome/react-fontawesome": "^3.3.1",
     "@supabase/supabase-js": "^2.104.1",
     "axios": "^1.15.0",
     "formik": "^2.4.9",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "sweetalert2": "^11.26.24",
     "yap": "^0.0.2",
     "yup": "^1.7.1"
   },

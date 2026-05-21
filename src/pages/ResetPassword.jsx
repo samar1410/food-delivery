@@ -51,14 +51,14 @@ const ResetPassword = () => {
             <Form className="space-y-5">
               <div className="flex  flex-col">
                 <div className=" flex items-center justify-center gap-2 relative">
-                  <RiLockPasswordFill className="text-black font-bold text-3xl" />
+              
                   <ShowPassword name="password" placeholder="New Password" />
                 </div>
               </div>
 
               <div className="flex flex-col">
                 <div className="flex items-center justify-center gap-2 relative">
-                  <RiLockPasswordFill className="text-black font-bold text-3xl" />
+             
                   <ShowPassword
                     name="confirmPassword"
                     placeholder="Confirm Password"
