@@ -1,153 +1,68 @@
-import React, { useEffect, useState } from "react";
-import { supabase } from "../supabase";
-import { FaTimes, FaUser, FaPhone, FaEnvelope, FaSignOutAlt } from "react-icons/fa";
-import Swal from "sweetalert2";
+import React from "react";
 
-const ProfileModal = ({ isOpen, onClose }) => {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // دالة لجلب بيانات المستخدم من Supabase
-    const fetchProfile = async () => {
-      setLoading(true);
-      
-      // 1. جلب بيانات الـ Auth (الإيميل)
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // 2. جلب البيانات الإضافية من جدول profiles
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-
-        if (data) {
-          setProfile({ ...data, email: user.email });
-        } else if (error) {
-          console.error("Error fetching profile:", error);
-        }
-      }
-      setLoading(false);
-    };
-
-    if (isOpen) {
-      fetchProfile();
-    }
-  }, [isOpen]);
-
-  // دالة تسجيل الخروج
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
-      onClose(); // إغلاق المودال
-      Swal.fire({
-        title: "Logged Out",
-        text: "See you again soon!",
-        icon: "info",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-      // إعادة تحميل الصفحة بعد فترة وجيزة لتحديث حالة الواجهة
-      setTimeout(() => window.location.reload(), 2000);
-    } else {
-      Swal.fire("Error", error.message, "error");
-    }
-  };
-
-  // لو المودال مقفول، ميبقاش فيه حاجة في الـ DOM
-  if (!isOpen) return null;
-
+const Footer = () => {
   return (
-    // الخلفية المعتمة (Overlay)
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-sm transition-opacity duration-300">
-      
-    
-      <div className="bg-white rounded-3xl shadow-2xl w-200  relative overflow-hidden animate-in fade-in  duration-300 ease-out">
-        
-        {/* هيدر المودال: صورة البيتزا */}
-        <div className="h-40 w-full relative">
-          <img 
-            src="/imgs/pizza.png" // المسار المباشر من مجلد public
-            alt="Pizza Header" 
-            className="w-full h-full object-cover"
-          />
-          {/* تأثير تدرج فوق الصورة لجعل النص أوضح */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent"></div>
+    <footer className="bg-[#0D0D0D] text-white py-16">
+      <div className="container mx-auto px-6">
+        {/* الجزء العلوي: اللوجو والاشتراك */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          
+          {/* عمود اللوجو والتحميل */}
+          <div className="space-y-4">
+            <h1 className="text-3xl font-extrabold text-brand-orange">Order<span className="text-black bg-white px-1 rounded">.uk</span></h1>
+            <div className="flex flex-col gap-3">
+              <img src="/app-store.png" alt="App Store" className="w-32 cursor-pointer" />
+              <img src="/google-play.png" alt="Google Play" className="w-32 cursor-pointer" />
+            </div>
+            <p className="text-gray-400 text-xs mt-4">Company # 490039-445, Registered with House of companies.</p>
+          </div>
+
+          {/* اشتراك الإيميل */}
+          <div className="lg:col-span-2 bg-[#1A1A1A] p-6 rounded-2xl flex flex-col justify-center">
+            <h3 className="font-bold text-lg mb-4">Get Exclusive Deals in your Inbox</h3>
+            <div className="flex bg-white rounded-full p-1 max-w-md">
+              <input type="email" placeholder="youremail@gmail.com" className="w-full px-4 py-2 text-black rounded-full outline-none" />
+              <button className="bg-brand-orange text-white px-6 py-2 rounded-full font-bold">Subscribe</button>
+            </div>
+            <p className="text-gray-500 text-xs mt-3">we won't spam, read our email policy</p>
+          </div>
+
+          {/* روابط قانونية وروابط مهمة */}
+          <div className="grid grid-cols-2 gap-8">
+            <div>
+              <h4 className="font-bold mb-4">Legal Pages</h4>
+              <ul className="text-gray-400 text-sm space-y-2">
+                <li>Terms and conditions</li>
+                <li>Privacy</li>
+                <li>Cookies</li>
+                <li>Modern Slavery Statement</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Important Links</h4>
+              <ul className="text-gray-400 text-sm space-y-2">
+                <li>Get help</li>
+                <li>Add your restaurant</li>
+                <li>Sign up to deliver</li>
+                <li>Create a business account</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        {/* زر الإغلاق (X) */}
-        <button 
-          onClick={onClose} 
-          className="absolute top-4 right-4 text-white hover:text-amber-300 transition-colors z-10 p-1 bg-black/30 rounded-full"
-        >
-          <FaTimes size={20} />
-        </button>
-        
-        {/* محتوى المودال (البيانات) */}
-        <div className="p-8">
-          <h2 className="text-3xl font-extrabold mb-1 text-gray-900 tracking-tight">My Profile</h2>
-          <p className="text-gray-500 mb-8 text-sm">Welcome back to your account</p>
-          
-          {loading ? (
-            <div className="flex flex-col items-center gap-3 py-10">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
-              <p className="text-gray-500 text-sm">Loading profile...</p>
-            </div>
-          ) : profile ? (
-            <div className="space-y-6">
-              {/* حقل الاسم */}
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <div className="bg-amber-100 p-3 rounded-full text-amber-600">
-                  <FaUser size={18} />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">Full Name</p>
-                  <p className="text-base font-semibold text-gray-900">{profile.name}</p>
-                </div>
-              </div>
-
-              {/* حقل الإيميل */}
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <div className="bg-amber-100 p-3 rounded-full text-amber-600">
-                  <FaEnvelope size={18} />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">Email Address</p>
-                  <p className="text-base font-semibold text-gray-900">{profile.email}</p>
-                </div>
-              </div>
-
-              {/* حقل التليفون */}
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <div className="bg-amber-100 p-3 rounded-full text-amber-600">
-                  <FaPhone size={18} />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">Phone Number</p>
-                  <p className="text-base font-semibold text-gray-900">{profile.phone}</p>
-                </div>
-              </div>
-              
-              {/* زر تسجيل الخروج */}
-              <button 
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-3 bg-red-50 text-red-600 py-3 rounded-full mt-10 hover:bg-red-100 transition-colors text-sm font-bold"
-              >
-                <FaSignOutAlt /> Sign Out
-              </button>
-            </div>
-          ) : (
-            <div className="text-center py-10 bg-red-50 rounded-2xl border border-red-100">
-              <p className="text-red-600 text-sm">Failed to load profile data.</p>
-              <p className="text-red-400 text-xs mt-1">Please try logging in again.</p>
-            </div>
-          )}
+        {/* الجزء السفلي: الحقوق والسوشيال */}
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs">
+          <p>© 2024 Order.uk Copyright 2024, All Rights Reserved.</p>
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <span>Privacy Policy</span>
+            <span>Terms</span>
+            <span>Pricing</span>
+            <span>Do not sell or share my personal information</span>
+          </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
-export default ProfileModal;
+export default Footer;

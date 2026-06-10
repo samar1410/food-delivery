@@ -1,7 +1,7 @@
 import React from "react";
 
-import TopFooterSection from "./TopFooterSection";
-import BottomFooterSection from "./BottomFooterSection";
+import TopFooterSection from "../sections/TopFooterSection";
+import BottomFooterSection from "../sections/BottomFooterSection";
 
 export default function Footer() {
   return (
