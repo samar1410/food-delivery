@@ -1,14 +1,20 @@
-import React from 'react'
-import Footer from '../components/Footer'
-
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import HeroSection from "../components/sections/HeroSection";
+import DealsSection from "../components/sections/DealsSection";
+import CategoriesSection from "../components/sections/CategoriesSection";
 
 const HomePage = () => {
-  return (
-    <div className='w-full h-dvh bg-yellow-600'>
-      <h1>Wellcome IN Home Page</h1>
-      
-       <Footer/></div>
-  )
-}
+  const [email, setEmail] = useState("");
 
-export default HomePage
+  return (
+    <div className="bg-white font-inter">
+      <HeroSection />
+      <DealsSection />
+        <CategoriesSection />
+      
+    </div>
+  );
+};
+
+export default HomePage;

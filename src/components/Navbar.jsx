@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { supabase } from "../supabase";
-import ProfileModal from "./ProfileModal"; // تأكدي إن المسار ده مظبوط
+import ProfileModal from "./ProfileModal";
 
 const Navbar = () => {
   const location = useLocation();
@@ -11,18 +11,7 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
-    // 1. Check current session
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-        fetchProfile(session.user.id);
-      }
-    };
-
-    getSession();
-
-    // 2. Listen for auth changes
+    // الـ listener ده بيغطي الحالة الأولية تلقائيًا + أي تغيير بعد كده
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (session?.user) {
@@ -99,7 +88,7 @@ const Navbar = () => {
       </div>
 
       {/* 3. Auth Section */}
-      <div className="flex items-center  gap-5">
+      <div className="flex items-center gap-5">
         {user ? (
           <button
             onClick={() => setIsProfileOpen(true)}

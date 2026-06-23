@@ -1,68 +1,118 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../supabase";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { FaUser, FaEnvelope, FaSignOutAlt, FaTimes } from "react-icons/fa";
 
-const Footer = () => {
+const ProfileModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const fetchData = async () => {
+      setLoading(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+      setEmail(session.user.email);
+      const { data } = await supabase
+        .from("profiles")
+        .select("name")
+        .eq("id", session.user.id)
+        .single();
+      setProfile(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, [isOpen]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Logged out successfully!");
+    onClose();
+    navigate("/login");
+  };
+
+  if (!isOpen) return null;
+
+  const initials = profile?.name
+    ? profile.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : "U";
+
   return (
-    <footer className="bg-[#0D0D0D] text-white py-16">
-      <div className="container mx-auto px-6">
-        {/* الجزء العلوي: اللوجو والاشتراك */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          
-          {/* عمود اللوجو والتحميل */}
-          <div className="space-y-4">
-            <h1 className="text-3xl font-extrabold text-brand-orange">Order<span className="text-black bg-white px-1 rounded">.uk</span></h1>
-            <div className="flex flex-col gap-3">
-              <img src="/app-store.png" alt="App Store" className="w-32 cursor-pointer" />
-              <img src="/google-play.png" alt="Google Play" className="w-32 cursor-pointer" />
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-3xl w-full max-w-xs shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header - برتقالي جريء */}
+        <div className="bg-brand-orange px-6 pt-10 pb-16 relative">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition cursor-pointer"
+          >
+            <FaTimes className="text-xs" />
+          </button>
+          <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">My Account</p>
+          <h2 className="text-white text-2xl font-extrabold tracking-tight">
+            {loading ? "..." : profile?.name || "User"}
+          </h2>
+        </div>
+
+        {/* Avatar فوق الفاصل */}
+        <div className="relative px-6 -mt-10 mb-4">
+          <div className="w-20 h-20 rounded-2xl bg-[#0D0D0D] flex items-center justify-center text-white text-2xl font-black shadow-xl border-4 border-white">
+            {loading ? <FaUser /> : initials}
+          </div>
+        </div>
+
+        {/* بيانات */}
+        <div className="px-6 space-y-3 mb-6">
+          {/* الاسم */}
+          <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3">
+            <div className="w-9 h-9 rounded-xl bg-brand-orange/10 flex items-center justify-center shrink-0">
+              <FaUser className="text-brand-orange text-sm" />
             </div>
-            <p className="text-gray-400 text-xs mt-4">Company # 490039-445, Registered with House of companies.</p>
+            <div>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Name</p>
+              <p className="text-sm font-extrabold text-[#0D0D0D]">
+                {loading ? "..." : profile?.name || "User"}
+              </p>
+            </div>
           </div>
 
-          {/* اشتراك الإيميل */}
-          <div className="lg:col-span-2 bg-[#1A1A1A] p-6 rounded-2xl flex flex-col justify-center">
-            <h3 className="font-bold text-lg mb-4">Get Exclusive Deals in your Inbox</h3>
-            <div className="flex bg-white rounded-full p-1 max-w-md">
-              <input type="email" placeholder="youremail@gmail.com" className="w-full px-4 py-2 text-black rounded-full outline-none" />
-              <button className="bg-brand-orange text-white px-6 py-2 rounded-full font-bold">Subscribe</button>
+          {/* الإيميل */}
+          <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3">
+            <div className="w-9 h-9 rounded-xl bg-brand-orange/10 flex items-center justify-center shrink-0">
+              <FaEnvelope className="text-brand-orange text-sm" />
             </div>
-            <p className="text-gray-500 text-xs mt-3">we won't spam, read our email policy</p>
-          </div>
-
-          {/* روابط قانونية وروابط مهمة */}
-          <div className="grid grid-cols-2 gap-8">
-            <div>
-              <h4 className="font-bold mb-4">Legal Pages</h4>
-              <ul className="text-gray-400 text-sm space-y-2">
-                <li>Terms and conditions</li>
-                <li>Privacy</li>
-                <li>Cookies</li>
-                <li>Modern Slavery Statement</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Important Links</h4>
-              <ul className="text-gray-400 text-sm space-y-2">
-                <li>Get help</li>
-                <li>Add your restaurant</li>
-                <li>Sign up to deliver</li>
-                <li>Create a business account</li>
-              </ul>
+            <div className="overflow-hidden">
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Email</p>
+              <p className="text-sm font-extrabold text-[#0D0D0D] truncate">
+                {loading ? "..." : email}
+              </p>
             </div>
           </div>
         </div>
 
-        {/* الجزء السفلي: الحقوق والسوشيال */}
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs">
-          <p>© 2024 Order.uk Copyright 2024, All Rights Reserved.</p>
-          <div className="flex gap-6 mt-4 md:mt-0">
-            <span>Privacy Policy</span>
-            <span>Terms</span>
-            <span>Pricing</span>
-            <span>Do not sell or share my personal information</span>
-          </div>
+        {/* Sign Out */}
+        <div className="px-6 pb-6">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-red-600 text-white font-extrabold text-sm py-4 rounded-2xl transition-all duration-300 cursor-pointer group"
+          >
+            <FaSignOutAlt className="group-hover:rotate-12 transition-transform duration-300" />
+            Sign Out
+          </button>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 
-export default Footer;
+export default ProfileModal;
